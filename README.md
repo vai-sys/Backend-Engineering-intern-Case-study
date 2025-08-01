@@ -1,5 +1,5 @@
 
-## Part 1
+# Part 1
 
 
 ## Technical Issues
@@ -105,17 +105,17 @@ router.post('/api/products', async (req, res) => {
 
 
 
-## Part 2
+# Part 2
 
 
-# Companies
+### Companies
   | Column | Type         | Description         |
 | ------ | ------------ | ------------------- |
 | id     | SERIAL       | Primary key         |
 | name   | VARCHAR(255) | Name of the company |
 
 
-# Warehouses
+### Warehouses
 | Column      | Type         | Description                    |
 | ----------- | ------------ | ------------------------------ |
 | id          | SERIAL       | Primary key                    |
@@ -124,7 +124,7 @@ router.post('/api/products', async (req, res) => {
 | location    | VARCHAR(255) | Address or location (optional) |
 
 
-# Products
+### Products
 
 
 | Column     | Type         | Description                          |
@@ -135,7 +135,7 @@ router.post('/api/products', async (req, res) => {
 | is\_bundle | BOOLEAN      | Indicates if the product is a bundle |
 
 
-# product_bundles
+### product_bundles
 
 | Column      | Type | Description                                   |
 | ----------- | ---- | --------------------------------------------- |
@@ -144,14 +144,14 @@ router.post('/api/products', async (req, res) => {
 | quantity    | INT  | Number of contained items in the bundle       |
 
 
-# suppliers
+### suppliers
 | Column | Type         | Description          |
 | ------ | ------------ | -------------------- |
 | id     | SERIAL       | Primary key          |
 | name   | VARCHAR(255) | Name of the supplier |
 
 
-# supplier_products
+### supplier_products
 
 | Column       | Type | Description                   |
 | ------------ | ---- | ----------------------------- |
@@ -159,7 +159,7 @@ router.post('/api/products', async (req, res) => {
 | product\_id  | INT  | Foreign key → `products(id)`  |
 
 
-# inventory
+### inventory
 | Column        | Type   | Description                    |
 | ------------- | ------ | ------------------------------ |
 | id            | SERIAL | Primary key                    |
@@ -169,7 +169,7 @@ router.post('/api/products', async (req, res) => {
 
 
 
-## Indexes and Constaints
+### Indexes and Constaints
 
 sku in products should be UNIQUE for faster lookups.
 
@@ -186,7 +186,7 @@ Indexes on warehouse_id, product_id in inventory for fast queries.
 3.  Do products need units ?
 
 
-### Part 3
+# Part 3
 
  ```js 
 
