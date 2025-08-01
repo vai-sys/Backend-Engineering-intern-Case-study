@@ -185,4 +185,84 @@ Indexes on warehouse_id, product_id in inventory for fast queries.
 2.  Do suppliers have priority or different pricing?
 3.  Do products need units ?
 
+ ```js 
 
+const express = require("express");
+const router = express.Router();
+const Product = require("../models/Product");
+const Inventory = require("../models/Inventory");
+const Sale = require("../models/Sale");
+const Supplier = require("../models/Supplier");
+
+router.get("/:companyId/alerts/low-stock", async (req, res) => {
+  const { companyId } = req.params;
+  const DAYS_LIMIT = 30;
+  const thresholdDefault = 10;
+  const dateLimit = new Date();
+  dateLimit.setDate(dateLimit.getDate() - DAYS_LIMIT);
+
+  try {
+    // Step 1: Get recent sales
+    const recentSales = await Sale.find({ saleDate: { $gte: dateLimit } });
+
+    const soldProductIds = [...new Set(recentSales.map(s => s.productId.toString()))];
+
+    // Step 2: Find products that are low in stock and were sold recently
+    const lowStockInventories = await Inventory.find({ productId: { $in: soldProductIds } });
+
+    const alerts = [];
+
+    for (const inventory of lowStockInventories) {
+      const product = await Product.findById(inventory.productId);
+      if (!product || product.companyId !== companyId) continue;
+
+      const threshold = product.threshold || thresholdDefault;
+
+      if (inventory.quantity < threshold) {
+        // Calculate avg daily sales
+        const productSales = recentSales.filter(s => s.productId.toString() === product.id);
+        const totalQty = productSales.reduce((sum, s) => sum + s.quantity, 0);
+        const avgDailySales = totalQty / DAYS_LIMIT;
+        const daysUntilStockout = avgDailySales > 0 ? Math.ceil(inventory.quantity / avgDailySales) : null;
+
+        // Get supplier
+        const supplier = await Supplier.findOne({ products: product._id });
+
+        alerts.push({
+          product_id: product.id,
+          product_name: product.name,
+          sku: product.sku,
+          current_stock: inventory.quantity,
+          threshold,
+          days_until_stockout: daysUntilStockout,
+          supplier: supplier
+            ? {
+                id: supplier.id,
+                name: supplier.name,
+                contact_email: supplier.contactEmail,
+              }
+            : null,
+        });
+      }
+    }
+
+    res.json({ alerts, total_alerts: alerts.length });
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
+module.exports = router;
+
+
+
+
+```
+
+
+## Assumptions
+We only care about products that have been sold in the last 30 days.
+Each product may have a field called threshold.If the current stock is less than this threshold, we consider it low in stock.
+The API is called with a company_id, so we only show alerts for that company’s warehouses and products.
