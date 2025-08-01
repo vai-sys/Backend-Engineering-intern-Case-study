@@ -169,6 +169,20 @@ router.post('/api/products', async (req, res) => {
 
 
 
+## Indexes and Constaints
 
+sku in products should be UNIQUE for faster lookups.
+
+Foreign keys ensure referential integrity.
+
+Consider adding ON DELETE CASCADE where appropriate .
+
+Indexes on warehouse_id, product_id in inventory for fast queries.
+
+
+## questions to be asked to Product team
+1. Can the products from the bundles be saled individually.
+2.  Do suppliers have priority or different pricing?
+3.  Do products need units ?
 
 
