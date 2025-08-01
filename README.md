@@ -1,3 +1,7 @@
+
+## Part 1
+
+
 ## Technical Issues
 
 - `request.json` is used without checking if it exists.  
@@ -86,7 +90,7 @@ router.post('/api/products', async (req, res) => {
   }
 });
 
-
+```
 
 ## Issues and Their Impact in Production
 
@@ -98,4 +102,73 @@ router.post('/api/products', async (req, res) => {
 
 3. **SKU not unique**  
    → If duplicate SKUs are allowed, it can cause confusion in inventory and incorrect reports.
+
+
+
+## Part 2
+
+
+# Companies
+  | Column | Type         | Description         |
+| ------ | ------------ | ------------------- |
+| id     | SERIAL       | Primary key         |
+| name   | VARCHAR(255) | Name of the company |
+
+
+# Warehouses
+| Column      | Type         | Description                    |
+| ----------- | ------------ | ------------------------------ |
+| id          | SERIAL       | Primary key                    |
+| company\_id | INT          | Foreign key → `companies(id)`  |
+| name        | VARCHAR(255) | Name of the warehouse          |
+| location    | VARCHAR(255) | Address or location (optional) |
+
+
+# Products
+
+
+| Column     | Type         | Description                          |
+| ---------- | ------------ | ------------------------------------ |
+| id         | SERIAL       | Primary key                          |
+| name       | VARCHAR(255) | Name of the product                  |
+| sku        | VARCHAR(100) | Unique SKU identifier                |
+| is\_bundle | BOOLEAN      | Indicates if the product is a bundle |
+
+
+# product_bundles
+
+| Column      | Type | Description                                   |
+| ----------- | ---- | --------------------------------------------- |
+| bundle\_id  | INT  | Foreign key → `products(id)` (the bundle)     |
+| product\_id | INT  | Foreign key → `products(id)` (contained item) |
+| quantity    | INT  | Number of contained items in the bundle       |
+
+
+# suppliers
+| Column | Type         | Description          |
+| ------ | ------------ | -------------------- |
+| id     | SERIAL       | Primary key          |
+| name   | VARCHAR(255) | Name of the supplier |
+
+
+# supplier_products
+
+| Column       | Type | Description                   |
+| ------------ | ---- | ----------------------------- |
+| supplier\_id | INT  | Foreign key → `suppliers(id)` |
+| product\_id  | INT  | Foreign key → `products(id)`  |
+
+
+# inventory
+| Column        | Type   | Description                    |
+| ------------- | ------ | ------------------------------ |
+| id            | SERIAL | Primary key                    |
+| warehouse\_id | INT    | Foreign key → `warehouses(id)` |
+| product\_id   | INT    | Foreign key → `products(id)`   |
+| quantity      | INT    | Current quantity in stock      |
+
+
+
+
+
 
