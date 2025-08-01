@@ -12,7 +12,7 @@
 - No input validation.  
   → Required fields like `price`, `name`, and `sku` are not checked before processing.
 
----
+
 
 ##  Business Logic Issues
 
@@ -23,7 +23,7 @@
 - Inventory is created even if quantity is `0` or missing.  
   
 
----
+
 
 ##  Fixes
 
