@@ -185,6 +185,9 @@ Indexes on warehouse_id, product_id in inventory for fast queries.
 2.  Do suppliers have priority or different pricing?
 3.  Do products need units ?
 
+
+### Part 3
+
  ```js 
 
 const express = require("express");
@@ -263,6 +266,9 @@ module.exports = router;
 
 
 ## Assumptions
-We only care about products that have been sold in the last 30 days.
-Each product may have a field called threshold.If the current stock is less than this threshold, we consider it low in stock.
-The API is called with a company_id, so we only show alerts for that company’s warehouses and products.
+
+-  We only care about **products that have been sold in the last 30 days** (these are considered "active").
+-  Each product may have a field called `threshold`. If the **current stock** is less than this threshold, we consider it **low in stock**.
+-  If a product doesn't have a `threshold`, we use a **default value **.
+-  The API is called with a `company_id`, so we only show **alerts for that company’s warehouses and products**.
+
